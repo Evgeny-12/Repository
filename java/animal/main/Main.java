@@ -1,6 +1,7 @@
 package animal.main;
 
 import animal.bird.Duck;
+import animal.data.Command;
 import animal.pets.Animal;
 import animal.pets.Cat;
 import animal.pets.Dog;
@@ -9,11 +10,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
 public class Main {
-    // Перечисление для команд
-    enum Command {
-        ADD, LIST, EXIT
-    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -46,6 +44,7 @@ public class Main {
             }
         }
     }
+
     private static void addAnimal(Scanner scanner, ArrayList<Animal> animals) {
         System.out.println("Какое животное? (cat/dog/duck):");
         String type = scanner.nextLine().trim().toLowerCase();
@@ -54,25 +53,29 @@ public class Main {
         String name = scanner.nextLine().trim();
 
         int age;
-        try {
-            System.out.println("Введите возраст:");
-            age = scanner.nextInt();
-            scanner.nextLine(); // Очистка буфера после ввода числа
-        } catch (InputMismatchException e) {
-            System.out.println("Некорректный возраст. Пожалуйста, введите целое число.");
-            scanner.nextLine(); // Очистка буфера после ввода некорректного значения
-            return;
+        while (true) {
+            try {
+                System.out.println("Введите возраст:");
+                age = scanner.nextInt();
+                scanner.nextLine(); // Очистка буфера после ввода числа
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Некорректный возраст. Пожалуйста, введите целое число.");
+                scanner.nextLine(); // Очистка буфера после ввода некорректного значения
+            }
         }
 
         double weight;
-        try {
-            System.out.println("Введите вес:");
-            weight = scanner.nextDouble();
-            scanner.nextLine(); // Очистка буфера после ввода числа
-        } catch (InputMismatchException e) {
-            System.out.println("Некорректный вес. Пожалуйста, введите число.");
-            scanner.nextLine(); // Очистка буфера после ввода некорректного значения
-            return;
+        while (true) {
+            try {
+                System.out.println("Введите вес:");
+                weight = scanner.nextDouble();
+                scanner.nextLine(); // Очистка буфера после ввода числа
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Некорректный вес. Пожалуйста, введите число.");
+                scanner.nextLine(); // Очистка буфера после ввода некорректного значения
+            }
         }
 
         System.out.println("Введите цвет:");
@@ -81,18 +84,22 @@ public class Main {
         Animal animal;
         switch (type) {
             case "cat":
-                animal = new Cat(name, age, weight, color);
+                animal = new Cat();
                 break;
             case "dog":
-                animal = new Dog(name, age, weight, color);
+                animal = new Dog();
                 break;
             case "duck":
-                animal = new Duck(name, age, weight, color);
+                animal = new Duck();
                 break;
             default:
                 System.out.println("Некорректный тип.");
                 return;
         }
+        animal.setName(name);
+        animal.setAge(age);
+        animal.setWeight(weight);
+        animal.setColor(color);
         animals.add(animal);
         animal.say();
     }
@@ -101,7 +108,7 @@ public class Main {
     private static void listAnimals(ArrayList<Animal> animals) {
         System.out.println("Список животных:");
         for (Animal animal : animals) {
-            System.out.println(animal);
+            System.out.println(animal.toString());
         }
     }
 }
